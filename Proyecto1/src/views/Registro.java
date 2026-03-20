@@ -1,6 +1,9 @@
 package views;
 
 import java.awt.Color;
+import javax.swing.JOptionPane;
+import models.Usuario;
+import utils.Sistema;
 
 public class Registro extends javax.swing.JFrame {
     
@@ -37,6 +40,8 @@ public class Registro extends javax.swing.JFrame {
         tituloCarrera = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         txtCarrera = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -118,12 +123,20 @@ public class Registro extends javax.swing.JFrame {
         bg.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 400, -1));
 
         btnIngresar.setBackground(new java.awt.Color(204, 204, 204));
+        btnIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnIngresarMouseClicked(evt);
+            }
+        });
 
         tituloIngresar.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
         tituloIngresar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tituloIngresar.setText("Ingresar");
+        tituloIngresar.setText("Crear cuenta");
         tituloIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tituloIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tituloIngresarMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 tituloIngresarMouseEntered(evt);
             }
@@ -230,6 +243,37 @@ public class Registro extends javax.swing.JFrame {
         });
         txtCarrera.addActionListener(this::txtCarreraActionPerformed);
         bg.add(txtCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 440, 400, 40));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
+            }
+        });
+
+        jLabel1.setBackground(new java.awt.Color(0, 51, 255));
+        jLabel1.setFont(new java.awt.Font("Sitka Text", 0, 10)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("¿Ya tienes cuenta? Inicia Sesión Aquí");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        bg.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 570, 190, 10));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -356,6 +400,42 @@ public class Registro extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCarreraActionPerformed
 
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+        Login mostrar = new Login();
+        mostrar.show();
+        dispose();
+    }//GEN-LAST:event_jPanel1MouseClicked
+
+    private void btnIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresarMouseClicked
+        
+    }//GEN-LAST:event_btnIngresarMouseClicked
+
+    private void tituloIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tituloIngresarMouseClicked
+        try {
+            String nombreCompleto = txtUsuario.getText();
+            String password = String.valueOf(txtContra.getPassword());
+            int carnet = Integer.parseInt(txtCarnet.getText());
+            String carrera = txtCarrera.getText();
+
+            for (int i = 0; i < Sistema.contadorUsuarios; i++) {
+                if (Sistema.usuarios[i].carnet == carnet) {
+                    JOptionPane.showMessageDialog(null, "Carnet ya existe");
+                    return;
+                }
+            }
+
+            Usuario nuevo = new Usuario(carnet, nombreCompleto, password, carrera, "estudiante");
+
+            Sistema.usuarios[Sistema.contadorUsuarios++] = nuevo;
+            
+            // Guardar usuario en el archivo cuentas.txt
+            Sistema.guardarUsuarioArchivo(nuevo);
+            JOptionPane.showMessageDialog(null, "Usuario registrado con éxito");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error en datos");
+        }
+    }//GEN-LAST:event_tituloIngresarMouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -388,6 +468,8 @@ public class Registro extends javax.swing.JFrame {
     private javax.swing.JPanel bgImagen;
     private javax.swing.JLabel btnExit;
     private javax.swing.JPanel btnIngresar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

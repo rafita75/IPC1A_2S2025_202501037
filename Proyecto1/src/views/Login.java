@@ -1,6 +1,10 @@
 package views;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
+import models.Usuario;
+import utils.Sistema;
 
 public class Login extends javax.swing.JFrame {
     
@@ -114,12 +118,21 @@ public class Login extends javax.swing.JFrame {
         bg.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 400, -1));
 
         btnIngresar.setBackground(new java.awt.Color(204, 204, 204));
+        btnIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnIngresarMouseClicked(evt);
+            }
+        });
 
         tituloIngresar.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
         tituloIngresar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tituloIngresar.setText("Ingresar");
         tituloIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tituloIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tituloIngresarMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 tituloIngresarMouseEntered(evt);
             }
@@ -189,6 +202,7 @@ public class Login extends javax.swing.JFrame {
         bg.add(BarraNavegacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 40));
 
         crearCuenta.setBackground(new java.awt.Color(255, 255, 255));
+        crearCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         crearCuenta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 crearCuentaMouseClicked(evt);
@@ -289,6 +303,41 @@ public class Login extends javax.swing.JFrame {
         mostrar.show();
         dispose();
     }//GEN-LAST:event_crearCuentaMouseClicked
+
+    private void btnIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresarMouseClicked
+        
+    }//GEN-LAST:event_btnIngresarMouseClicked
+
+    private void tituloIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tituloIngresarMouseClicked
+        try {
+            String usuario = txtUsuario.getText();
+            String password = String.valueOf(txtContra.getPassword());
+
+            for (int i = 0; i < Sistema.contadorUsuarios; i++) {
+                Usuario u = Sistema.usuarios[i];
+
+                if (u.nombreCompleto.equals(usuario) && u.password.equals(password)) {
+
+                    JOptionPane.showMessageDialog(null, "Bienvenido " + u.nombreCompleto);
+
+                    switch (u.rol) {
+                        case "admin" -> JOptionPane.showMessageDialog(null, "ADMIN");
+                        case "estudiante" -> JOptionPane.showMessageDialog(null, "ESTUDIANTE");
+                        case "operador" -> JOptionPane.showMessageDialog(null, "OPERADOR");
+                        default -> {
+                        }
+                    }
+                    
+                    return;
+                }
+            }
+
+            JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
+
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Ingrese datos válidos");
+        }
+    }//GEN-LAST:event_tituloIngresarMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

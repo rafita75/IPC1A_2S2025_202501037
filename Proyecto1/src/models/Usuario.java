@@ -1,24 +1,35 @@
 package models;
 
 public class Usuario {
-    public String username;
+    public int carnet;
+    public String nombreCompleto;
     public String password;
     public String rol; // admin, operador, estudiante
-    public String nombre;
+    public String carrera;
 
-    public Usuario(String username, String password, String rol, String nombre) {
-        this.username = username;
+    public Usuario(int carnet, String nombreCompleto, String password, String rol, String carrera) {
+        this.nombreCompleto = nombreCompleto;
         this.password = password;
         this.rol = rol;
-        this.nombre = nombre;
+        this.carrera = carrera;
+        this.carnet = carnet;
     }
 
-    public String getUsername() {
-        return username;
+    public int getCarnet() {
+        return carnet;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCarnet(int carnet) {
+        this.carnet = carnet;
+    }
+    
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getPassword() {
@@ -37,13 +48,15 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getCarrera() {
+        return carrera;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
     }
+
+    
     
     
 }
