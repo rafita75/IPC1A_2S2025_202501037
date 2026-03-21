@@ -431,6 +431,7 @@ public class Registro extends javax.swing.JFrame {
             // Guardar usuario en el archivo cuentas.txt
             Sistema.guardarUsuarioArchivo(nuevo);
             JOptionPane.showMessageDialog(null, "Usuario registrado con éxito");
+            Sistema.escribirBitacora("CREACION USUARIO", String.valueOf(carnet), "USUARIOS");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en datos");
         }

@@ -14,49 +14,4 @@ public class Usuario {
         this.carrera = carrera;
         this.carnet = carnet;
     }
-
-    public int getCarnet() {
-        return carnet;
-    }
-
-    public void setCarnet(int carnet) {
-        this.carnet = carnet;
-    }
-    
-
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public String getCarrera() {
-        return carrera;
-    }
-
-    public void setCarrera(String carrera) {
-        this.carrera = carrera;
-    }
-
-    
-    
-    
 }

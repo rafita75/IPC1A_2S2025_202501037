@@ -318,7 +318,7 @@ public class Login extends javax.swing.JFrame {
                 Usuario u = Sistema.usuarios[i];
 
                 if (u.nombreCompleto.equals(usuario) && u.password.equals(password)) {
-
+                    Sistema.escribirBitacora("LOGIN EXITOSO", String.valueOf(u.carnet), "LOGIN");
                     Sistema.usuarioActual = u;
                     JOptionPane.showMessageDialog(null, "Bienvenido " + u.nombreCompleto);
                     dashboard inicio = new dashboard();
@@ -329,6 +329,7 @@ public class Login extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
+            Sistema.escribirBitacora("LOGIN FALLIDO", txtUsuario.getText(), "LOGIN");
 
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Ingrese datos válidos");

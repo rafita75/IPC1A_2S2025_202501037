@@ -1,5 +1,6 @@
 package utils;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -143,6 +144,27 @@ public class Sistema {
             fw.close();
         } catch (Exception e) {
             System.out.println("Error al reescribir libros");
+        }
+    }
+    
+    //BITACORA
+    public static void escribirBitacora(String operacion, String usuario, String modulo) {
+        try {
+            FileWriter fw = new FileWriter("bitacora.txt", true);
+
+            LocalDateTime ahora = LocalDateTime.now();
+
+            DateTimeFormatter fechaFormato = DateTimeFormatter.ofPattern("dd/MM/yy");
+            DateTimeFormatter horaFormato = DateTimeFormatter.ofPattern("hh:mm a");
+
+            String fecha = ahora.format(fechaFormato);
+            String hora = ahora.format(horaFormato);
+
+            fw.write("[" + operacion + "][" + usuario + "][" + modulo + "][" + fecha + "][" + hora + "]\n");
+
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error en bitacora");
         }
     }
 }

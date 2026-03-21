@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import models.Libro;
+import views.Login;
 
 public class dashboard extends javax.swing.JFrame {
     
@@ -464,6 +465,9 @@ public class dashboard extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("cerrar sesion");
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel7MouseEntered(evt);
             }
@@ -1750,11 +1754,13 @@ public class dashboard extends javax.swing.JFrame {
             Sistema.guardarUsuarioArchivo(nuevo);
 
             JOptionPane.showMessageDialog(null, "Usuario agregado");
+            Sistema.escribirBitacora("CREACION USUARIO", String.valueOf(u.carnet), "USUARIOS");
 
             cargarTablaUsuarios();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en datos");
+            Sistema.escribirBitacora("ERROR EN LA CREACION USUARIO", String.valueOf(u.carnet), "USUARIOS");
         }
     }//GEN-LAST:event_jLabel6MouseClicked
 
@@ -1790,6 +1796,7 @@ public class dashboard extends javax.swing.JFrame {
             cargarTablaUsuarios();
 
             JOptionPane.showMessageDialog(null, "Usuario eliminado");
+            Sistema.escribirBitacora("ELIMINACION USUARIO", String.valueOf(u.carnet), "USUARIOS");
         }
     }//GEN-LAST:event_jLabel10MouseClicked
 
@@ -1822,9 +1829,11 @@ public class dashboard extends javax.swing.JFrame {
             cargarTablaUsuarios();
 
             JOptionPane.showMessageDialog(null, "Usuario actualizado");
+            Sistema.escribirBitacora("MODIFICACION USUARIO", String.valueOf(u.carnet), "USUARIOS");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al modificar");
+            Sistema.escribirBitacora("ERROR EN LA MODIFICACION USUARIO", String.valueOf(u.carnet), "USUARIOS");
         }
     }//GEN-LAST:event_jLabel8MouseClicked
 
@@ -1872,35 +1881,43 @@ public class dashboard extends javax.swing.JFrame {
             Sistema.guardarLibroArchivo(nuevo);
 
             JOptionPane.showMessageDialog(null, "Libro agregado");
+            Sistema.escribirBitacora("CREACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
 
             cargarTablaLibros();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en datos");
+            Sistema.escribirBitacora("ERROR EN LA CREACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
         }
     }//GEN-LAST:event_txtNuevoLibroMouseClicked
 
     private void txtEliminarLibroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtEliminarLibroMouseClicked
         int fila = tablaLibros.getSelectedRow();
-
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "Seleccione un libro");
             return;
         }
+        try{
+            
 
-        //TODO: VALIDAR PRESTAMOS
+            //TODO: VALIDAR PRESTAMOS
 
-        for (int i = fila; i < Sistema.contadorLibros - 1; i++) {
-            Sistema.libros[i] = Sistema.libros[i + 1];
+            for (int i = fila; i < Sistema.contadorLibros - 1; i++) {
+                Sistema.libros[i] = Sistema.libros[i + 1];
+            }
+
+            Sistema.contadorLibros--;
+
+            Sistema.reescribirArchivoLibros();
+
+            cargarTablaLibros();
+
+            JOptionPane.showMessageDialog(null, "Libro eliminado");
+            Sistema.escribirBitacora("ELIMINACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
+        }catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar");
+            Sistema.escribirBitacora("ERROR EN LA ELIMINACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
         }
-
-        Sistema.contadorLibros--;
-
-        Sistema.reescribirArchivoLibros();
-
-        cargarTablaLibros();
-
-        JOptionPane.showMessageDialog(null, "Libro eliminado");
     }//GEN-LAST:event_txtEliminarLibroMouseClicked
 
     private void txtModificarLibroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtModificarLibroMouseClicked
@@ -1927,15 +1944,24 @@ public class dashboard extends javax.swing.JFrame {
             cargarTablaLibros();
 
             JOptionPane.showMessageDialog(null, "Libro actualizado");
+            Sistema.escribirBitacora("MODIFICACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error");
+            Sistema.escribirBitacora("ERROR EN LA MODIFICACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
         }
     }//GEN-LAST:event_txtModificarLibroMouseClicked
 
     private void txtBuscarLibroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarLibroMouseClicked
         buscarLibros();
     }//GEN-LAST:event_txtBuscarLibroMouseClicked
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        Login inicio = new Login();
+        inicio.show();
+        Sistema.escribirBitacora("CERRAR SESION", Sistema.usuarioActual.carnet+"", "LOGIN");
+        dispose();
+    }//GEN-LAST:event_jLabel7MouseClicked
 
     /**
      * @param args the command line arguments
