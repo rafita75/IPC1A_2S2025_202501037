@@ -227,4 +227,20 @@ public class Sistema {
             System.out.println("No hay archivo prestamos.txt");
         }
     }
+    
+    // generar archivos html, utilizamos la estructura basica de html
+    public static void generarHTML(String contenido, String nombreArchivo) {
+        try {
+            FileWriter fw = new FileWriter(nombreArchivo + ".html");
+
+            fw.write("<html><head><meta charset='UTF-8'></head><body>");
+            fw.write(contenido);
+            fw.write("</body></html>");
+
+            fw.close();
+
+        } catch (Exception e) {
+            System.out.println("Error al generar HTML");
+        }
+    }
 }

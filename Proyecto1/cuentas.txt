@@ -2,3 +2,4 @@
 123;asdf;asdf;estudiante;asdf
 0;admin;admin;admin;Administrador
 1;Angel;123;operador;a
+2;Rafael;123456789;operador;a

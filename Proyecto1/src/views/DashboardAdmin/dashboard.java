@@ -38,7 +38,6 @@ public class dashboard extends javax.swing.JFrame {
         cargarTablaUsuarios();
         cargarTablaLibros();
         cargarTablaPrestamos();
-        pintarVencidos();
         
         
         // ADMIN
@@ -205,26 +204,74 @@ public class dashboard extends javax.swing.JFrame {
         tablaPrestamos.setModel(modelo);
     }
     
-    //Pintar fila vencida
-    public void pintarVencidos() {
+    //MOSTRAR PRESTAMOS ACTIVOS
+    public void mostrarActivos() {
 
-        for (int i = 0; i < tablaPrestamos.getRowCount(); i++) {
+        DefaultTableModel modelo = new DefaultTableModel();
 
-            String estado = tablaPrestamos.getValueAt(i, 5).toString();
+        modelo.addColumn("Código");
+        modelo.addColumn("Carnet");
+        modelo.addColumn("Libro");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Límite");
+        modelo.addColumn("Estado");
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            if (p.estado.equals("ACTIVO")) {
+                modelo.addRow(new Object[]{
+                    p.codigo,
+                    p.carnet,
+                    p.codigoLibro,
+                    p.fechaPrestamo,
+                    p.fechaLimite,
+                    p.estado
+                });
+            }
+        }
+
+        tablaPrestamos.setModel(modelo);
+    }
+    
+    public void mostrarVencidos() {
+
+        DefaultTableModel modelo = new DefaultTableModel();
+
+        modelo.addColumn("Código");
+        modelo.addColumn("Carnet");
+        modelo.addColumn("Libro");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Límite");
+        modelo.addColumn("Estado");
+
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yy");
+        LocalDate hoy = LocalDate.now();
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
 
             try {
+                LocalDate fechaLimite = LocalDate.parse(p.fechaLimite, formato);
 
-                if (estado.equals("VENCIDO")) {
-                    tablaPrestamos.setRowSelectionInterval(i, i);
-                    tablaPrestamos.setSelectionBackground(Color.RED);
+                if (p.estado.equals("ACTIVO") && fechaLimite.isBefore(hoy)) {
+
+                    modelo.addRow(new Object[]{
+                        p.codigo,
+                        p.carnet,
+                        p.codigoLibro,
+                        p.fechaPrestamo,
+                        p.fechaLimite,
+                        "VENCIDO" // 🔥 se muestra diferente
+                    });
                 }
 
             } catch (Exception e) {}
         }
 
-        tablaPrestamos.clearSelection(); // quitar selección final
+        tablaPrestamos.setModel(modelo);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -307,6 +354,8 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         panelInicio = new javax.swing.JPanel();
+        LogoUsac = new javax.swing.JLabel();
+        NombreProyecto1 = new javax.swing.JLabel();
         panelPrestamos = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaPrestamos = new javax.swing.JTable();
@@ -314,6 +363,8 @@ public class dashboard extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaLibros = new javax.swing.JTable();
         panelReportes = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tablaReportes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -475,7 +526,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        Navegacion.add(btnUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, -1, -1));
+        Navegacion.add(btnUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, -1, -1));
 
         btnReportes.setBackground(new java.awt.Color(204, 204, 204));
         btnReportes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -508,7 +559,7 @@ public class dashboard extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        Navegacion.add(btnReportes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, -1, -1));
+        Navegacion.add(btnReportes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, -1, -1));
 
         btnCerrarSesion.setBackground(new java.awt.Color(204, 204, 204));
         btnCerrarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -813,6 +864,9 @@ public class dashboard extends javax.swing.JFrame {
         prestamosactivos.setText("Todos");
         prestamosactivos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         prestamosactivos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prestamosactivosMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 prestamosactivosMouseEntered(evt);
             }
@@ -826,6 +880,9 @@ public class dashboard extends javax.swing.JFrame {
         prestamosvencidos.setText("Prestamos Activos");
         prestamosvencidos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         prestamosvencidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prestamosvencidosMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 prestamosvencidosMouseEntered(evt);
             }
@@ -840,6 +897,9 @@ public class dashboard extends javax.swing.JFrame {
         todos.setText("Prestamos Vencidos");
         todos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         todos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                todosMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 todosMouseEntered(evt);
             }
@@ -1095,6 +1155,9 @@ public class dashboard extends javax.swing.JFrame {
         prestamosactivostxxt.setText("Libros Disponibles");
         prestamosactivostxxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         prestamosactivostxxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prestamosactivostxxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 prestamosactivostxxtMouseEntered(evt);
             }
@@ -1109,6 +1172,9 @@ public class dashboard extends javax.swing.JFrame {
         prestamosvencidostxt.setText("Prestamos Activos");
         prestamosvencidostxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         prestamosvencidostxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prestamosvencidostxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 prestamosvencidostxtMouseEntered(evt);
             }
@@ -1123,6 +1189,9 @@ public class dashboard extends javax.swing.JFrame {
         top5librostxt.setText("Prestamos Vencidos");
         top5librostxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         top5librostxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                top5librostxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 top5librostxtMouseEntered(evt);
             }
@@ -1137,6 +1206,9 @@ public class dashboard extends javax.swing.JFrame {
         historialporusuariotxt.setText("Top 5 Libros");
         historialporusuariotxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         historialporusuariotxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                historialporusuariotxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 historialporusuariotxtMouseEntered(evt);
             }
@@ -1155,7 +1227,7 @@ public class dashboard extends javax.swing.JFrame {
 
         txtHistorialporUsuario.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtHistorialporUsuario.setForeground(new java.awt.Color(204, 204, 204));
-        txtHistorialporUsuario.setText("Carnet o Nombre");
+        txtHistorialporUsuario.setText("Carnet");
         txtHistorialporUsuario.setToolTipText("");
         txtHistorialporUsuario.setBorder(null);
         txtHistorialporUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1176,6 +1248,9 @@ public class dashboard extends javax.swing.JFrame {
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setText("Buscar");
         jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel18MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel18MouseEntered(evt);
             }
@@ -1343,17 +1418,39 @@ public class dashboard extends javax.swing.JFrame {
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
-        panelInicio.setBackground(new java.awt.Color(255, 102, 102));
+        panelInicio.setBackground(new java.awt.Color(255, 255, 255));
+
+        LogoUsac.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LogoUsac.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/LogoUSAC.png"))); // NOI18N
+        LogoUsac.setToolTipText("");
+
+        NombreProyecto1.setFont(new java.awt.Font("Stencil", 1, 36)); // NOI18N
+        NombreProyecto1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        NombreProyecto1.setText("BIENVENIDO");
 
         javax.swing.GroupLayout panelInicioLayout = new javax.swing.GroupLayout(panelInicio);
         panelInicio.setLayout(panelInicioLayout);
         panelInicioLayout.setHorizontalGroup(
             panelInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 760, Short.MAX_VALUE)
+            .addGroup(panelInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelInicioLayout.createSequentialGroup()
+                    .addGap(195, 195, 195)
+                    .addGroup(panelInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(LogoUsac, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(NombreProyecto1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGap(195, 195, 195)))
         );
         panelInicioLayout.setVerticalGroup(
             panelInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 560, Short.MAX_VALUE)
+            .addGroup(panelInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelInicioLayout.createSequentialGroup()
+                    .addGap(69, 69, 69)
+                    .addComponent(LogoUsac)
+                    .addGap(18, 18, 18)
+                    .addComponent(NombreProyecto1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(69, Short.MAX_VALUE)))
         );
 
         panelPrestamos.setBackground(new java.awt.Color(255, 255, 255));
@@ -1420,17 +1517,36 @@ public class dashboard extends javax.swing.JFrame {
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
-        panelReportes.setBackground(new java.awt.Color(0, 204, 204));
+        panelReportes.setBackground(new java.awt.Color(255, 255, 255));
+
+        tablaReportes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(tablaReportes);
 
         javax.swing.GroupLayout panelReportesLayout = new javax.swing.GroupLayout(panelReportes);
         panelReportes.setLayout(panelReportesLayout);
         panelReportesLayout.setHorizontalGroup(
             panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 760, Short.MAX_VALUE)
+            .addGroup(panelReportesLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         panelReportesLayout.setVerticalGroup(
             panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
+            .addGroup(panelReportesLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelContenedorLayout = new javax.swing.GroupLayout(panelContenedor);
@@ -1949,6 +2065,16 @@ public class dashboard extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Código ya existe");
                     return;
                 }
+            }// validar ISBN
+            for (int i = 0; i < Sistema.contadorLibros; i++) {
+                if (Sistema.libros[i].isbn.equals(isbn)) {
+                    JOptionPane.showMessageDialog(null, "ISBN ya existe");
+                    return;
+                }
+            }// tamano del ISBN
+            if (!(isbn.length() == 10 || isbn.length() == 13)) {
+                JOptionPane.showMessageDialog(null, "ISBN debe tener 10 o 13 dígitos");
+                return;
             }
 
             Libro nuevo = new Libro(codigo, isbn, titulo, autor, cantidad);
@@ -2187,9 +2313,202 @@ public class dashboard extends javax.swing.JFrame {
         cargarTablaPrestamos();
     }//GEN-LAST:event_devoluciontxtMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
+    private void prestamosactivosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prestamosactivosMouseClicked
+        cargarTablaPrestamos();
+    }//GEN-LAST:event_prestamosactivosMouseClicked
+
+    private void prestamosvencidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prestamosvencidosMouseClicked
+        mostrarActivos();
+    }//GEN-LAST:event_prestamosvencidosMouseClicked
+
+    private void todosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_todosMouseClicked
+        mostrarVencidos();
+    }//GEN-LAST:event_todosMouseClicked
+
+    private void prestamosactivostxxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prestamosactivostxxtMouseClicked
+        reporteLibrosDisponibles();
+    }//GEN-LAST:event_prestamosactivostxxtMouseClicked
+
+    private void prestamosvencidostxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prestamosvencidostxtMouseClicked
+        reportePrestamosActivos();
+    }//GEN-LAST:event_prestamosvencidostxtMouseClicked
+
+    private void top5librostxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_top5librostxtMouseClicked
+        reportePrestamosVencidos();
+    }//GEN-LAST:event_top5librostxtMouseClicked
+
+    private void historialporusuariotxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_historialporusuariotxtMouseClicked
+        reporteTop5Libros();
+    }//GEN-LAST:event_historialporusuariotxtMouseClicked
+
+    private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
+        reporteHistorialUsuario();
+    }//GEN-LAST:event_jLabel18MouseClicked
+
+    public void reporteHistorialUsuario() {
+
+        String carnet = txtHistorialporUsuario.getText();
+
+        String html = "<h1>Historial Usuario</h1><table border='1'>";
+        html += "<tr><th>Código</th><th>Libro</th><th>Estado</th></tr>";
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Libro");
+        modelo.addColumn("Estado");
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            if (p.carnet.equals(carnet)) {
+
+                html += "<tr><td>" + p.codigo + "</td><td>" + p.codigoLibro + "</td><td>" + p.estado + "</td></tr>";
+
+                modelo.addRow(new Object[]{p.codigo, p.codigoLibro, p.estado});
+            }
+        }
+
+        html += "</table>";
+
+        Sistema.generarHTML(html, "historial_usuario");
+        tablaReportes.setModel(modelo);
+    }
+    
+    public void reporteLibrosDisponibles() {
+        String html = "<h1>Libros Disponibles</h1><table border='1'>";
+        html += "<tr><th>Código</th><th>Título</th><th>Disponible</th></tr>";
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Título");
+        modelo.addColumn("Disponible");
+
+        for (int i = 0; i < Sistema.contadorLibros; i++) {
+            Libro l = Sistema.libros[i];
+
+            if (l.cantidadDisponible > 0) {
+
+                html += "<tr><td>" + l.codigo + "</td><td>" + l.titulo + "</td><td>" + l.cantidadDisponible + "</td></tr>";
+
+                modelo.addRow(new Object[]{l.codigo, l.titulo, l.cantidadDisponible});
+            }
+        }
+
+        html += "</table>";
+
+        Sistema.generarHTML(html, "libros_disponibles");
+        tablaReportes.setModel(modelo);
+    }
+    
+    public void reportePrestamosActivos() {
+        String html = "<h1>Préstamos Activos</h1><table border='1'>";
+        html += "<tr><th>Código</th><th>Carnet</th><th>Libro</th></tr>";
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Carnet");
+        modelo.addColumn("Libro");
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            if (p.estado.equals("ACTIVO")) {
+
+                html += "<tr><td>" + p.codigo + "</td><td>" + p.carnet + "</td><td>" + p.codigoLibro + "</td></tr>";
+
+                modelo.addRow(new Object[]{p.codigo, p.carnet, p.codigoLibro});
+            }
+        }
+
+        html += "</table>";
+
+        Sistema.generarHTML(html, "prestamos_activos");
+        tablaReportes.setModel(modelo);
+    }
+    
+    public void reportePrestamosVencidos() {
+        String html = "<h1>Préstamos Vencidos</h1><table border='1'>";
+        html += "<tr><th>Código</th><th>Carnet</th><th>Libro</th></tr>";
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Código");
+        modelo.addColumn("Carnet");
+        modelo.addColumn("Libro");
+
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yy");
+        LocalDate hoy = LocalDate.now();
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            try {
+                LocalDate limite = LocalDate.parse(p.fechaLimite, formato);
+
+                if (p.estado.equals("ACTIVO") && limite.isBefore(hoy)) {
+
+                    html += "<tr><td>" + p.codigo + "</td><td>" + p.carnet + "</td><td>" + p.codigoLibro + "</td></tr>";
+
+                    modelo.addRow(new Object[]{p.codigo, p.carnet, p.codigoLibro});
+                }
+
+            } catch (Exception e) {}
+        }
+
+        html += "</table>";
+
+        Sistema.generarHTML(html, "prestamos_vencidos");
+        tablaReportes.setModel(modelo);
+    }
+    
+    public void reporteTop5Libros() {
+        int[] conteo = new int[Sistema.contadorLibros];
+
+        // contar préstamos
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            for (int j = 0; j < Sistema.contadorLibros; j++) {
+                if (Sistema.libros[j].codigo.equals(p.codigoLibro)) {
+                    conteo[j]++;
+                }
+            }
+        }
+
+        String html = "<h1>Top 5 Libros</h1><table border='1'>";
+        html += "<tr><th>Título</th><th>Préstamos</th></tr>";
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Título");
+        modelo.addColumn("Préstamos");
+
+        for (int k = 0; k < 5; k++) {
+
+            int max = -1;
+            int pos = -1;
+
+            for (int i = 0; i < Sistema.contadorLibros; i++) {
+                if (conteo[i] > max) {
+                    max = conteo[i];
+                    pos = i;
+                }
+            }
+
+            if (pos == -1) break;
+
+            Libro l = Sistema.libros[pos];
+
+            html += "<tr><td>" + l.titulo + "</td><td>" + max + "</td></tr>";
+
+            modelo.addRow(new Object[]{l.titulo, max});
+
+            conteo[pos] = -1; // para no repetir
+        }
+
+        html += "</table>";
+
+        Sistema.generarHTML(html, "top5_libros");
+        tablaReportes.setModel(modelo);
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -2215,8 +2534,10 @@ public class dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BarraNavegacion;
     private javax.swing.JPanel Filtros;
+    private javax.swing.JLabel LogoUsac;
     private javax.swing.JPanel Navegacion;
     private javax.swing.JLabel NombreProyecto;
+    private javax.swing.JLabel NombreProyecto1;
     private javax.swing.JPanel PanelReportesListado;
     private javax.swing.JPanel bg;
     private javax.swing.JPanel btnBuscarHistorialPorUsuario;
@@ -2262,6 +2583,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -2292,6 +2614,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JSeparator separadorHistorial;
     private javax.swing.JTable tablaLibros;
     private javax.swing.JTable tablaPrestamos;
+    private javax.swing.JTable tablaReportes;
     private javax.swing.JTable tablaUsuarios;
     private javax.swing.JLabel todos;
     private javax.swing.JLabel top5librostxt;
