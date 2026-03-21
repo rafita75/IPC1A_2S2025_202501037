@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import models.Usuario;
 import models.Libro;
+import models.Prestamo;
+
 
 public class Sistema {
     public static Usuario[] usuarios = new Usuario[100];
@@ -16,6 +18,10 @@ public class Sistema {
     // Libros
     public static Libro[] libros = new Libro[100];
     public static int contadorLibros = 0;
+    
+    //PRESTAMOS 
+    public static Prestamo[] prestamos = new Prestamo[200];
+    public static int contadorPrestamos = 0;
     
     // Cargar Usuario ya guardados desde archivo cuentas.txt
     public static void cargarUsuarios() {
@@ -165,6 +171,60 @@ public class Sistema {
             fw.close();
         } catch (Exception e) {
             System.out.println("Error en bitacora");
+        }
+    }
+    
+    //MANEO DE ARHICVOS PARA PRESTAMOS
+    public static void guardarPrestamoArchivo(Prestamo p) {
+        try {
+            FileWriter fw = new FileWriter("prestamos.txt", true);
+
+            fw.write(p.codigo + ";" + p.carnet + ";" + p.codigoLibro + ";" +
+                     p.fechaPrestamo + ";" + p.fechaLimite + ";" + p.estado + "\n");
+
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error al guardar prestamos");
+        }
+    }
+    
+    //modificacion del archivo prestamos.txt para cuando cambie el estado del prestamo 
+    public static void reescribirArchivoPrestamos() {
+        try {
+            FileWriter fw = new FileWriter("prestamos.txt");
+
+            for (int i = 0; i < contadorPrestamos; i++) {
+                Prestamo p = prestamos[i];
+
+                fw.write(p.codigo + ";" + p.carnet + ";" + p.codigoLibro + ";" +
+                         p.fechaPrestamo + ";" + p.fechaLimite + ";" + p.estado + "\n");
+            }
+
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error al reescribir prestamos");
+        }
+    }
+    
+    // funcion para cargar los prestamos que tenemos en el archivo prestamos.txt
+    public static void cargarPrestamos() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("prestamos.txt"));
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+                String[] d = linea.split(";");
+
+                Prestamo p = new Prestamo(
+                    d[0], d[1], d[2], d[3], d[4], d[5]
+                );
+
+                prestamos[contadorPrestamos++] = p;
+            }
+
+            br.close();
+        } catch (Exception e) {
+            System.out.println("No hay archivo prestamos.txt");
         }
     }
 }

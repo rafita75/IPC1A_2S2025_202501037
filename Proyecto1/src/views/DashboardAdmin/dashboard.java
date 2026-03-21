@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import models.Libro;
+import models.Prestamo;
 import views.Login;
 
 public class dashboard extends javax.swing.JFrame {
@@ -36,6 +37,8 @@ public class dashboard extends javax.swing.JFrame {
         btnBuscarHistorialPorUsuario.setVisible(false);
         cargarTablaUsuarios();
         cargarTablaLibros();
+        cargarTablaPrestamos();
+        pintarVencidos();
         
         
         // ADMIN
@@ -174,6 +177,53 @@ public class dashboard extends javax.swing.JFrame {
 
         tablaLibros.setModel(modelo);
     }
+    
+    //seguimos usando nuestro codigo para realizar estas cosas que ya son repetitivas 
+    public void cargarTablaPrestamos() {
+        DefaultTableModel modelo = new DefaultTableModel();
+
+        modelo.addColumn("Código");
+        modelo.addColumn("Carnet");
+        modelo.addColumn("Libro");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Límite");
+        modelo.addColumn("Estado");
+
+        for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+            Prestamo p = Sistema.prestamos[i];
+
+            modelo.addRow(new Object[]{
+                p.codigo,
+                p.carnet,
+                p.codigoLibro,
+                p.fechaPrestamo,
+                p.fechaLimite,
+                p.estado
+            });
+        }
+
+        tablaPrestamos.setModel(modelo);
+    }
+    
+    //Pintar fila vencida
+    public void pintarVencidos() {
+
+        for (int i = 0; i < tablaPrestamos.getRowCount(); i++) {
+
+            String estado = tablaPrestamos.getValueAt(i, 5).toString();
+
+            try {
+
+                if (estado.equals("VENCIDO")) {
+                    tablaPrestamos.setRowSelectionInterval(i, i);
+                    tablaPrestamos.setSelectionBackground(Color.RED);
+                }
+
+            } catch (Exception e) {}
+        }
+
+        tablaPrestamos.clearSelection(); // quitar selección final
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -258,6 +308,8 @@ public class dashboard extends javax.swing.JFrame {
         tablaUsuarios = new javax.swing.JTable();
         panelInicio = new javax.swing.JPanel();
         panelPrestamos = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaPrestamos = new javax.swing.JTable();
         panelLibros = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaLibros = new javax.swing.JTable();
@@ -694,6 +746,9 @@ public class dashboard extends javax.swing.JFrame {
         devoluciontxt.setText("Devolucion");
         devoluciontxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         devoluciontxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                devoluciontxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 devoluciontxtMouseEntered(evt);
             }
@@ -722,6 +777,9 @@ public class dashboard extends javax.swing.JFrame {
         nuevoprestamotxt.setText("Nuevo Prestamo");
         nuevoprestamotxt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         nuevoprestamotxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nuevoprestamotxtMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 nuevoprestamotxtMouseEntered(evt);
             }
@@ -801,10 +859,10 @@ public class dashboard extends javax.swing.JFrame {
         FiltrosLayout.setVerticalGroup(
             FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FiltrosLayout.createSequentialGroup()
-                .addComponent(prestamosvencidos, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(todos, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addComponent(prestamosvencidos, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(todos, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(prestamosactivos, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -1298,17 +1356,36 @@ public class dashboard extends javax.swing.JFrame {
             .addGap(0, 560, Short.MAX_VALUE)
         );
 
-        panelPrestamos.setBackground(new java.awt.Color(0, 0, 204));
+        panelPrestamos.setBackground(new java.awt.Color(255, 255, 255));
+
+        tablaPrestamos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tablaPrestamos);
 
         javax.swing.GroupLayout panelPrestamosLayout = new javax.swing.GroupLayout(panelPrestamos);
         panelPrestamos.setLayout(panelPrestamosLayout);
         panelPrestamosLayout.setHorizontalGroup(
             panelPrestamosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 760, Short.MAX_VALUE)
+            .addGroup(panelPrestamosLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         panelPrestamosLayout.setVerticalGroup(
             panelPrestamosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
+            .addGroup(panelPrestamosLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         panelLibros.setBackground(new java.awt.Color(255, 255, 255));
@@ -1899,21 +1976,44 @@ public class dashboard extends javax.swing.JFrame {
         }
         try{
             
+            Libro libro = Sistema.libros[fila];
 
             //TODO: VALIDAR PRESTAMOS
+            for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+                Prestamo p = Sistema.prestamos[i];
 
-            for (int i = fila; i < Sistema.contadorLibros - 1; i++) {
-                Sistema.libros[i] = Sistema.libros[i + 1];
+                if (p.codigoLibro.equals(libro.codigo) && p.estado.equals("ACTIVO")) {
+                    JOptionPane.showMessageDialog(null, "No se puede eliminar, tiene préstamos activos");
+
+                    // bitácora
+                    Sistema.escribirBitacora("OPERACION ERRONEA", 
+                        Sistema.usuarioActual.carnet+"", 
+                        "LIBROS");
+
+                    return;
+                }
             }
 
-            Sistema.contadorLibros--;
+            // cambiare esto para tener una mejor estructura de eliminacion y tener una confirmacionn
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Eliminar libro?");
 
-            Sistema.reescribirArchivoLibros();
+            if (opcion == JOptionPane.YES_OPTION) {
 
-            cargarTablaLibros();
+                // eliminar del array
+                for (int i = fila; i < Sistema.contadorLibros - 1; i++) {
+                    Sistema.libros[i] = Sistema.libros[i + 1];
+                }
 
-            JOptionPane.showMessageDialog(null, "Libro eliminado");
-            Sistema.escribirBitacora("ELIMINACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
+                Sistema.contadorLibros--;
+
+                Sistema.reescribirArchivoLibros();
+
+                Sistema.escribirBitacora("ELIMINACION LIBRO", Sistema.usuarioActual.carnet+"",  "LIBROS");
+
+                cargarTablaLibros();
+
+                JOptionPane.showMessageDialog(null, "Libro eliminado");
+            }
         }catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al eliminar");
             Sistema.escribirBitacora("ERROR EN LA ELIMINACION LIBRO", Sistema.usuarioActual.carnet+"", "LIBROS");
@@ -1962,6 +2062,130 @@ public class dashboard extends javax.swing.JFrame {
         Sistema.escribirBitacora("CERRAR SESION", Sistema.usuarioActual.carnet+"", "LOGIN");
         dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void nuevoprestamotxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoprestamotxtMouseClicked
+        try {
+            String carnet = JOptionPane.showInputDialog("Carnet:");
+            String codigoLibro = JOptionPane.showInputDialog("Código del libro:");
+
+            // PRIMER BUSCAR EL LIBRO
+            Libro libro = null;
+            
+            //SELECCIONAR EL LIBRO SOLICITADO
+            for (int i = 0; i < Sistema.contadorLibros; i++) {
+                if (Sistema.libros[i].codigo.equals(codigoLibro)) {
+                    libro = Sistema.libros[i];
+                    break;
+                }
+            }
+            
+            
+            if (libro == null) {
+                JOptionPane.showMessageDialog(null, "Libro no existe");
+                Sistema.escribirBitacora("OPERACION ERRONEA", carnet, "PRESTAMOS");
+                return;
+            }
+
+            //VALIDACION DE STOCK
+            if (libro.cantidadDisponible <= 0) {
+                JOptionPane.showMessageDialog(null, "Sin stock");
+                Sistema.escribirBitacora("OPERACION ERRONEA", carnet, "PRESTAMOS");
+                return;
+            }
+
+            // VALIDACION DE PRESTAMOS ACTIVOS
+            int contador = 0;
+
+            for (int i = 0; i < Sistema.contadorPrestamos; i++) {
+                if (Sistema.prestamos[i].carnet.equals(carnet) &&
+                    Sistema.prestamos[i].estado.equals("ACTIVO")) {
+                    contador++;
+                }
+            }
+            
+            //VALIDACION DE MAXIMO DE PRESTAMOS
+            if (contador >= 3) {
+                JOptionPane.showMessageDialog(null, "Máx 3 préstamos");
+                Sistema.escribirBitacora("OPERACION ERRONEA", carnet, "PRESTAMOS");
+                return;
+            }
+
+            // DETERMINAR LA FECHA DEL PRESTAMO Y LA FECHA LIMITE DE DEVOLVER
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yy");
+
+            LocalDate hoy = LocalDate.now();
+            LocalDate limite = hoy.plusDays(15);
+
+            String fechaPrestamo = hoy.format(formato);
+            String fechaLimite = limite.format(formato);
+
+            String codigoPrestamo = "P" + (Sistema.contadorPrestamos + 1);
+
+            Prestamo nuevo = new Prestamo(
+                codigoPrestamo,
+                carnet,
+                codigoLibro,
+                fechaPrestamo,
+                fechaLimite,
+                "ACTIVO"
+            );
+
+            Sistema.prestamos[Sistema.contadorPrestamos++] = nuevo;
+
+            libro.cantidadDisponible--;
+
+            Sistema.guardarPrestamoArchivo(nuevo);
+            Sistema.reescribirArchivoLibros();
+
+            Sistema.escribirBitacora("CREACION PRESTAMO", carnet, "PRESTAMOS");
+
+            JOptionPane.showMessageDialog(null, "Préstamo registrado");
+
+            cargarTablaPrestamos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error");
+            Sistema.escribirBitacora("ERROR EN LA CREACION PRESTAMO", Sistema.usuarioActual.carnet+ "", "PRESTAMOS");
+        }
+    }//GEN-LAST:event_nuevoprestamotxtMouseClicked
+
+    private void devoluciontxtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_devoluciontxtMouseClicked
+        // seleccionar la fila del prestamo a devolver
+        int fila = tablaPrestamos.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione un préstamo");
+            return;
+        }
+
+        Prestamo p = Sistema.prestamos[fila];
+
+        if (p.estado.equals("DEVUELTO")) {
+            JOptionPane.showMessageDialog(null, "Ya está devuelto");
+            return;
+        }
+
+        // cambiar estado
+        p.estado = "DEVUELTO";
+
+        // devolver stock
+        for (int i = 0; i < Sistema.contadorLibros; i++) {
+            if (Sistema.libros[i].codigo.equals(p.codigoLibro)) {
+                Sistema.libros[i].cantidadDisponible++;
+                break;
+            }
+        }
+
+        // guardar cambios
+        Sistema.reescribirArchivoPrestamos();
+        Sistema.reescribirArchivoLibros();
+
+        Sistema.escribirBitacora("DEVOLUCION", p.carnet, "PRESTAMOS");
+
+        JOptionPane.showMessageDialog(null, "Libro devuelto");
+
+        cargarTablaPrestamos();
+    }//GEN-LAST:event_devoluciontxtMouseClicked
 
     /**
      * @param args the command line arguments
@@ -2037,6 +2261,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -2066,6 +2291,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel prestamosvencidostxt;
     private javax.swing.JSeparator separadorHistorial;
     private javax.swing.JTable tablaLibros;
+    private javax.swing.JTable tablaPrestamos;
     private javax.swing.JTable tablaUsuarios;
     private javax.swing.JLabel todos;
     private javax.swing.JLabel top5librostxt;

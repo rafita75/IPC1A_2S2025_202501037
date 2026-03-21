@@ -1,2 +1,2 @@
-1;1;Clean Code;Autor1;5;5
+1;1;Clean Code;Autor1;5;3
 2;2;JavaScript;Autor2;6;6
