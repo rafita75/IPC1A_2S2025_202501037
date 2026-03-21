@@ -319,20 +319,11 @@ public class Login extends javax.swing.JFrame {
 
                 if (u.nombreCompleto.equals(usuario) && u.password.equals(password)) {
 
+                    Sistema.usuarioActual = u;
                     JOptionPane.showMessageDialog(null, "Bienvenido " + u.nombreCompleto);
-
-                    switch (u.rol) {
-                        case "admin" -> {
-                            dashboard iniciar = new dashboard();
-                            iniciar.show();
-                            dispose();
-                        }
-                        case "estudiante" -> JOptionPane.showMessageDialog(null, "ESTUDIANTE");
-                        case "operador" -> JOptionPane.showMessageDialog(null, "OPERADOR");
-                        default -> {
-                        }
-                    }
-                    
+                    dashboard inicio = new dashboard();
+                    inicio.show();
+                    dispose();
                     return;
                 }
             }

@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Sistema.cargarUsuarios();
         Sistema.inicializarAdmin(); 
+        Sistema.cargarLibros();
         Login iniciar = new Login();
         iniciar.show();
     }

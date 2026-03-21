@@ -1,2 +1,3 @@
-202501037;Angel Rafael Juarez Higueros;123456789;estudiante;Ciencias y Sistemas
-123;asdf;asdf;estudiante;asdf
+202501037;Angel Rafael Juarez Higueros;123456789;Ciencias y Sistemas;estudiante
+123;asdf;asdf;asdf;estudiante
+0;admin;admin;Administrador;admin
