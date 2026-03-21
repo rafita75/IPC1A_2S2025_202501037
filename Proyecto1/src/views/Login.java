@@ -1,5 +1,6 @@
 package views;
 
+import views.DashboardAdmin.dashboard;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
@@ -93,7 +94,7 @@ public class Login extends javax.swing.JFrame {
         tituloUsuario.setText("Usuario");
         bg.add(tituloUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 200, 40));
 
-        txtUsuario.setFont(new java.awt.Font("Stencil", 0, 12)); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtUsuario.setForeground(new java.awt.Color(204, 204, 204));
         txtUsuario.setText("Ingrese su nombre de usuario");
         txtUsuario.setBorder(null);
@@ -104,7 +105,7 @@ public class Login extends javax.swing.JFrame {
         });
         bg.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 400, 40));
 
-        txtContra.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtContra.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtContra.setForeground(new java.awt.Color(204, 204, 204));
         txtContra.setText("**********");
         txtContra.setBorder(null);
@@ -321,7 +322,11 @@ public class Login extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Bienvenido " + u.nombreCompleto);
 
                     switch (u.rol) {
-                        case "admin" -> JOptionPane.showMessageDialog(null, "ADMIN");
+                        case "admin" -> {
+                            dashboard iniciar = new dashboard();
+                            iniciar.show();
+                            dispose();
+                        }
                         case "estudiante" -> JOptionPane.showMessageDialog(null, "ESTUDIANTE");
                         case "operador" -> JOptionPane.showMessageDialog(null, "OPERADOR");
                         default -> {

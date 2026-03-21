@@ -98,7 +98,7 @@ public class Registro extends javax.swing.JFrame {
         tituloUsuario.setText("Usuario");
         bg.add(tituloUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 200, 40));
 
-        txtUsuario.setFont(new java.awt.Font("Stencil", 0, 12)); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtUsuario.setForeground(new java.awt.Color(204, 204, 204));
         txtUsuario.setText("Ingrese su nombre de usuario");
         txtUsuario.setBorder(null);
@@ -109,7 +109,7 @@ public class Registro extends javax.swing.JFrame {
         });
         bg.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 400, 40));
 
-        txtContra.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtContra.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtContra.setForeground(new java.awt.Color(204, 204, 204));
         txtContra.setText("**********");
         txtContra.setBorder(null);
@@ -216,7 +216,7 @@ public class Registro extends javax.swing.JFrame {
         bg.add(tituloCarnet, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, 200, 40));
         bg.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 390, 400, -1));
 
-        txtCarnet.setFont(new java.awt.Font("Stencil", 0, 12)); // NOI18N
+        txtCarnet.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtCarnet.setForeground(new java.awt.Color(204, 204, 204));
         txtCarnet.setText("Ingrese su numero de carnet");
         txtCarnet.setBorder(null);
@@ -232,7 +232,7 @@ public class Registro extends javax.swing.JFrame {
         bg.add(tituloCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 400, 200, 40));
         bg.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, 400, -1));
 
-        txtCarrera.setFont(new java.awt.Font("Stencil", 0, 12)); // NOI18N
+        txtCarrera.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         txtCarrera.setForeground(new java.awt.Color(204, 204, 204));
         txtCarrera.setText("Ingrese su carrera");
         txtCarrera.setBorder(null);
